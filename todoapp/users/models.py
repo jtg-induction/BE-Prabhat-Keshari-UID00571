@@ -1,37 +1,28 @@
 from __future__ import unicode_literals
-from django.utils import timezone
+
 from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import BaseUserManager
-from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.models import BaseUserManager, PermissionsMixin
 from django.db import models
+from django.utils import timezone
 
 
 class UserManager(BaseUserManager):
     """
     Add manager methods here to create user and super user
     """
-    def create_user(self, email,password, **extra_fields):
+    def create_user(self, email, password, **extra_fields):
         if not email:
             raise ValueError("The Email field must be set")
         email = self.normalize_email(email)
-        user = self.model(
-            email=email,
-            **extra_fields
-        )
+        user = self.model(email=email, *extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, first_name, last_name, password=None, **extra_fields):
+    def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-
-        return self.create_user(
-            email,
-            password,
-            **extra_fields
-        )
-
+        return self.create_user(email, password, **extra_fields)
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
@@ -47,18 +38,21 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     - last_name (max_length=150)
     """
     is_superuser = models.BooleanField(default=False)
-    first_name = models.CharField(max_length=30)
-    email = models.EmailField(unique=True)
+    first_name = models.CharField(max_length=30, verbose_name="First name")
+    email = models.EmailField(unique=True, verbose_name="Email")
     is_staff = models.BooleanField(default=False)
-    date_joined = models.DateTimeField(default=timezone.now,null=True)
-    last_name = models.CharField(max_length=150)
+    date_joined = models.DateTimeField(default=timezone.now, null=True)
+    last_name = models.CharField(max_length=150, verbose_name="Last name")
     is_active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "User"
+        verbose_name_plural = "Users"
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name','last_name']
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     def __str__(self):
         return self.email
-

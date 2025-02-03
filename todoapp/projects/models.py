@@ -22,14 +22,16 @@ class Project(models.Model):
         through='ProjectMember',
         related_name='projects'
     )
-    name = models.CharField(max_length=100)
-    max_members = models.PositiveIntegerField()
-    status = models.IntegerField(choices=STATUS_CHOICES, default=0)
+    name = models.CharField(max_length=100, verbose_name="Project name")
+    max_members = models.PositiveIntegerField(verbose_name="Max member allowed")
+    status = models.IntegerField(choices=STATUS_CHOICES, default=0, verbose_name="Project status")
+
+    class Meta:
+        verbose_name = "Project"
+        verbose_name_plural = "Projects"
 
     def __str__(self):
         return self.name
-
-    
 
 
 class ProjectMember(models.Model):
@@ -50,7 +52,3 @@ class ProjectMember(models.Model):
 
     def __str__(self):
         return f'{self.project.name} => {self.member.first_name}'
-
-
-
-

@@ -1,10 +1,10 @@
 from __future__ import unicode_literals
+
+from django.conf import settings
 from django.db import models
+from django.utils import timezone
 from django.utils.encoding import smart_str
 from django.utils.translation import gettext_lazy as _
-from django.conf import settings
-from django.utils import timezone
-
 
 
 class Todo(models.Model):
@@ -18,14 +18,18 @@ class Todo(models.Model):
 
         Add string representation for this model with todos name.
     """
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) 
-    name = models.CharField(max_length=1000)
-    done = models.BooleanField(default=False)
-    date_created = models.DateTimeField(default=timezone.now)
-    date_completed = models.DateTimeField(null=True, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Created by") 
+    name = models.CharField(max_length=1000, verbose_name="Todo name")
+    done = models.BooleanField(default=False, verbose_name="Todo Done")
+    date_created = models.DateTimeField(auto_now_add=True, verbose_name="Date of Creation")
+    date_completed = models.DateTimeField(null=True, blank=True, editable=False, verbose_name="Date of Completion")
+
+    class Meta:
+        verbose_name = "To-Do"
+        verbose_name_plural = "To-Dos"
 
     def save(self, *args, **kwargs):
-        if self.done and not self.date_completed:
+        if self.done:
             self.date_completed = timezone.now()
         super().save(*args, **kwargs)
     

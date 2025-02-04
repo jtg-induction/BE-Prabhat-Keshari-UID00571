@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+
 from todos.models import Todo
 from users.serializers import UserSerializer
 
@@ -44,3 +45,28 @@ class TodoDateRangeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Todo
         fields = ['id', 'name', 'creator', 'email', 'created_at', 'status']
+
+
+class TodoViewSetCreateSerializer(serializers.ModelSerializer):
+    user_id = serializers.PrimaryKeyRelatedField(source="user",
+                                                 queryset=get_user_model().objects.all())
+    todo = serializers.CharField(source='name')
+    class Meta:
+        model = Todo
+        fields = ['user_id', 'todo']
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        return {
+            "name": representation["todo"],
+            "done": instance.done,
+            "date_created": instance.date_created.isoformat()
+        }
+
+
+class TodoViewSetSerializer(serializers.ModelSerializer):
+    todo_id = serializers.IntegerField(source='id')
+    todo = serializers.CharField(source='name')
+    class Meta:
+        model = Todo
+        fields = ['todo_id', 'todo', 'done']

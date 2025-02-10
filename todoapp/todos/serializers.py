@@ -48,13 +48,15 @@ class TodoDateRangeSerializer(serializers.ModelSerializer):
 
 
 class TodoViewSetCreateSerializer(serializers.ModelSerializer):
-    user_id = serializers.PrimaryKeyRelatedField(
-        source="user", queryset=CustomUser.objects.all()
-    )
     todo = serializers.CharField(source='name')
+
     class Meta:
         model = Todo
-        fields = ['user_id', 'todo']
+        fields = ['todo']
+
+    def create(self, validated_data):
+        validated_data['user_id'] = self.context['request'].user.id
+        return super().create(validated_data)
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

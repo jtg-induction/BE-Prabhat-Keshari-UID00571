@@ -2,6 +2,7 @@ from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
+from rest_framework import status
 
 from users.models import CustomUser
 
@@ -29,10 +30,22 @@ class UserStatsSerializer(serializers.ModelSerializer):
 class UserRegistrationSerializer(serializers.ModelSerializer):
 
     password = serializers.CharField(write_only=True)
+    confirm_password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        if data.get('password') != data.get('confirm_password'):
+            raise serializers.ValidationError(
+                "Password and Confirm Password must match.", 
+                code = status.HTTP_400_BAD_REQUEST
+            )
+        return data
     
     class Meta:
         model = CustomUser
-        fields = ['email', 'first_name', 'last_name', 'password', 'date_joined']
+        fields = [
+            'email', 'first_name', 'last_name', 
+            'password', 'confirm_password', 'date_joined'
+        ]
 
     def create(self, validated_data):
         user = CustomUser(

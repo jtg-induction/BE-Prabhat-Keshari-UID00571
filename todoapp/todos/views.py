@@ -36,5 +36,4 @@ class TodoAPIViewSet(ModelViewSet):
         token = self.request.auth.key
         user_id = Token.objects.get(key=token).user
         return Todo.objects.filter(user=user_id)
-    
         

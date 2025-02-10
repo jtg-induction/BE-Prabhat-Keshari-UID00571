@@ -11,10 +11,8 @@ from projects.serializers import (
     ProjectWithMemberName,
     UserProjectSerializer
 )
-
 from todos.models import Todo
 from todos.serializers import TodoDateRangeSerializer, TodoSerializer
-
 from users.models import CustomUser
 from users.serializers import UserSerializer, UserStatsSerializer
 

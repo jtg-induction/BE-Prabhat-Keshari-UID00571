@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-
 from todos.models import Todo
+from users.models import CustomUser
 from users.serializers import UserSerializer
 
 
@@ -49,7 +49,7 @@ class TodoDateRangeSerializer(serializers.ModelSerializer):
 
 class TodoViewSetCreateSerializer(serializers.ModelSerializer):
     user_id = serializers.PrimaryKeyRelatedField(source="user",
-                                                 queryset=get_user_model().objects.all())
+                                                 queryset=CustomUser().objects.all())
     todo = serializers.CharField(source='name')
     class Meta:
         model = Todo

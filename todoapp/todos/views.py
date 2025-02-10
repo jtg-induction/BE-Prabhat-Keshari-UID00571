@@ -33,3 +33,4 @@ class TodoAPIViewSet(ModelViewSet):
         if user_id is not None:
             return Todo.objects.filter(user__id=user_id)  
         return Todo.objects.all()
+        

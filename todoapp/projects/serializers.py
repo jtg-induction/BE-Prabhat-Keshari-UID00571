@@ -78,3 +78,4 @@ class UserProjectSerializer(serializers.ModelSerializer):
 
     def get_completed_projects(self, obj):
         return obj.completed if obj.completed else []
+    

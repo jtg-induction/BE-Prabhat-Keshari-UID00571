@@ -39,7 +39,6 @@ def fetch_all_users():
     """
     users = CustomUser.objects.all()
     serializer = UserSerializer(users, many=True)
-    return json.loads(json.dumps(serializer.data))
     users = CustomUser.objects.all()
     serializer = UserSerializer(users, many=True)
     return json.loads(json.dumps(serializer.data))
@@ -77,7 +76,6 @@ def fetch_all_todo_list_with_user_details():
     """
     todos = Todo.objects.select_related('user').all()
     serializer = TodoSerializer(todos, many=True)
-    return json.loads(json.dumps(serializer.data))
     todos = Todo.objects.select_related('user').all()
     serializer = TodoSerializer(todos, many=True)
     return json.loads(json.dumps(serializer.data))
@@ -109,7 +107,6 @@ def fetch_projects_details():
         existing_member_count=Count("projectmember")
     )
     serializer = ProjectSerializer(projects, many=True)
-    return json.loads(json.dumps(serializer.data))
     projects = Project.objects.annotate(
         existing_member_count=Count("projectmember")
     )
@@ -147,7 +144,6 @@ def fetch_users_todo_stats():
         pending_count=Count('todo', filter=Q(todo__done=False))
     ).all()
     serializer = UserStatsSerializer(users_stats, many=True)
-    return json.loads(json.dumps(serializer.data))
     User = CustomUser
     users_stats = User.objects.annotate(
         completed_count=Count('todo', filter=Q(todo__done=True)),
@@ -189,7 +185,6 @@ def fetch_five_users_with_max_pending_todos():
         )
     ).order_by('-pending_count')[:5]
     serializer = UserStatsSerializer(users_with_pending_todos, many=True)
-    return json.loads(json.dumps(serializer.data))
     User = CustomUser
     users_with_pending_todos = User.objects.annotate(
         pending_count=Count(
@@ -238,7 +233,6 @@ def fetch_users_with_n_pending_todos(n):
         )
     ).filter(pending_count=n)
     serializer = UserStatsSerializer(users_with_pending_todos, many=True)
-    return json.loads(json.dumps(serializer.data))
     User = CustomUser
     users_with_pending_todos = User.objects.annotate(
         pending_count=Count(
@@ -290,7 +284,6 @@ def fetch_completed_todos_with_in_date_range(start, end):
     )
 
     serializer = TodoDateRangeSerializer(todos, many=True)
-    return json.loads(json.dumps(serializer.data))
     start_date = datetime.strptime(start, "%d-%m-%Y")
     end_date = datetime.strptime(end, "%d-%m-%Y")
 
@@ -328,7 +321,6 @@ def fetch_project_with_member_name_start_or_end_with_a():
     ).distinct()
 
     serializer = ProjectWithMemberName(projects, many=True)
-    return json.loads(json.dumps(serializer.data))
     projects = Project.objects.filter(
         Q(members__first_name__istartswith='A') | Q(
             members__last_name__iendswith='A')
@@ -408,7 +400,6 @@ def fetch_project_wise_report():
     )
 
     serialized_data = ProjectReportSerializer(project_data, many=True)
-    return json.loads(json.dumps(serialized_data.data))
     
     members_prefetch = Prefetch(
         'members',
@@ -486,7 +477,6 @@ def fetch_user_wise_project_status():
     )
 
     serializer = UserProjectSerializer(users, many=True)
-    return json.loads(json.dumps(serializer.data))
     users = CustomUser.objects.annotate(
         to_do=ArrayAgg(
             'projectmember__project__name',
@@ -506,4 +496,3 @@ def fetch_user_wise_project_status():
 
     serializer = UserProjectSerializer(users, many=True)
     return json.loads(json.dumps(serializer.data))
-

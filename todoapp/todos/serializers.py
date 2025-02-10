@@ -44,3 +44,4 @@ class TodoDateRangeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Todo
         fields = ['id', 'name', 'creator', 'email', 'created_at', 'status']
+        

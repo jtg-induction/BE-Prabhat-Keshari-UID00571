@@ -21,3 +21,4 @@ class UserStatsSerializer(serializers.ModelSerializer):
             'id', 'first_name', 'last_name', 'email', 
             'completed_count', 'pending_count'
         ]
+        

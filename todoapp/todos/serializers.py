@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+
 from todos.models import Todo
 from users.models import CustomUser
 from users.serializers import UserSerializer

@@ -49,7 +49,7 @@ class TodoDateRangeSerializer(serializers.ModelSerializer):
 
 class TodoViewSetCreateSerializer(serializers.ModelSerializer):
     user_id = serializers.PrimaryKeyRelatedField(
-        source="user", queryset=CustomUser().objects.all()
+        source="user", queryset=CustomUser.objects.all()
     )
     todo = serializers.CharField(source='name')
     class Meta:

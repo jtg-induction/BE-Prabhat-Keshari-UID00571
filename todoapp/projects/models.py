@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 
+
 class Project(models.Model):
     """
         Needed fields
@@ -26,10 +27,6 @@ class Project(models.Model):
     max_members = models.PositiveIntegerField(verbose_name="Max member allowed")
     status = models.IntegerField(choices=STATUS_CHOICES, default=0, verbose_name="Project status")
 
-    class Meta:
-        verbose_name = "Project"
-        verbose_name_plural = "Projects"
-
     def __str__(self):
         return self.name
 
@@ -52,3 +49,4 @@ class ProjectMember(models.Model):
 
     def __str__(self):
         return f'{self.project.name} => {self.member.first_name}'
+    

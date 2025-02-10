@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
-from django.utils.encoding import smart_str
 from django.utils.translation import gettext_lazy as _
 
 
@@ -24,10 +23,6 @@ class Todo(models.Model):
     date_created = models.DateTimeField(auto_now_add=True, verbose_name="Date of Creation")
     date_completed = models.DateTimeField(null=True, blank=True, editable=False, verbose_name="Date of Completion")
 
-    class Meta:
-        verbose_name = "To-Do"
-        verbose_name_plural = "To-Dos"
-
     def save(self, *args, **kwargs):
         if self.done:
             self.date_completed = timezone.now()
@@ -35,3 +30,4 @@ class Todo(models.Model):
     
     def __str__(self):
         return self.name
+    

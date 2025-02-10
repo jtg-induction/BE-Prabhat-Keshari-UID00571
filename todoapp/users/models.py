@@ -10,19 +10,19 @@ class UserManager(BaseUserManager):
     """
     Add manager methods here to create user and super user
     """
-    def create_user(self, email, password, **extra_fields):
+    def create_user(self, email, password, first_name=None, last_name=None, **kwargs):
         if not email:
             raise ValueError("The Email field must be set")
         email = self.normalize_email(email)
-        user = self.model(email=email, *extra_fields)
+        user = self.model(email=email, *kwargs)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        return self.create_user(email, password, **extra_fields)
+    def create_superuser(self, email, password=None, first_name=None, last_name=None, **kwargs):
+        return self.create_user(
+            email, password, first_name, last_name, is_staff=True, is_superuser=True, **kwargs
+        )
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
@@ -45,10 +45,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=150, verbose_name="Last name")
     is_active = models.BooleanField(default=True)
 
-    class Meta:
-        verbose_name = "User"
-        verbose_name_plural = "Users"
-
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
@@ -56,3 +52,4 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    

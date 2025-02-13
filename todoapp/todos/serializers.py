@@ -52,6 +52,7 @@ class TodoViewSetCreateSerializer(serializers.ModelSerializer):
         source="user", queryset=CustomUser.objects.all()
     )
     todo = serializers.CharField(source='name')
+
     class Meta:
         model = Todo
         fields = ['user_id', 'todo']
@@ -68,7 +69,7 @@ class TodoViewSetCreateSerializer(serializers.ModelSerializer):
 class TodoViewSetSerializer(serializers.ModelSerializer):
     todo_id = serializers.IntegerField(source='id')
     todo = serializers.CharField(source='name')
+
     class Meta:
         model = Todo
         fields = ['todo_id', 'todo', 'done']
-        

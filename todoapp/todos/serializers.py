@@ -18,9 +18,9 @@ class TodoSerializer(serializers.ModelSerializer):
 
     def get_status(self, obj):
         return "Done" if obj.done else "To Do"
-    
+
     def get_creator(self, obj):
-        creator_data = UserSerializer(obj.user).data  
+        creator_data = UserSerializer(obj.user).data
         creator_data.pop('id', None)
         return creator_data
 

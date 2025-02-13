@@ -49,4 +49,3 @@ class ProjectMember(models.Model):
 
     def __str__(self):
         return f'{self.project.name} => {self.member.first_name}'
-    

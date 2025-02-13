@@ -30,5 +30,5 @@ class TodoAPIViewSet(ModelViewSet):
         return TodoViewSetSerializer
 
     def get_queryset(self):
-        user_id = self.request.query_params.get('user_id', None)
+        user_id = self.request.data['user_id']
         return Todo.objects.filter(user__id=user_id)

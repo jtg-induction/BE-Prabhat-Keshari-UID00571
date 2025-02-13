@@ -496,3 +496,4 @@ def fetch_user_wise_project_status():
 
     serializer = UserProjectSerializer(users, many=True)
     return json.loads(json.dumps(serializer.data))
+    

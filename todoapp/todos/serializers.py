@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from todos.models import Todo
+from users.models import CustomUser
 from users.serializers import UserSerializer
 
 
@@ -17,9 +18,9 @@ class TodoSerializer(serializers.ModelSerializer):
 
     def get_status(self, obj):
         return "Done" if obj.done else "To Do"
-    
+
     def get_creator(self, obj):
-        creator_data = UserSerializer(obj.user).data  
+        creator_data = UserSerializer(obj.user).data
         creator_data.pop('id', None)
         return creator_data
 
@@ -44,4 +45,15 @@ class TodoDateRangeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Todo
         fields = ['id', 'name', 'creator', 'email', 'created_at', 'status']
-        
+
+
+class UserTodoStatsSerializer(serializers.ModelSerializer):
+    completed_count = serializers.IntegerField(read_only=True)
+    pending_count = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = CustomUser
+        fields = [
+            'id', 'first_name', 'last_name', 'email',
+            'completed_count', 'pending_count'
+        ]

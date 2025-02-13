@@ -47,6 +47,18 @@ class TodoDateRangeSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'creator', 'email', 'created_at', 'status']
 
 
+class UserTodoStatsSerializer(serializers.ModelSerializer):
+    completed_count = serializers.IntegerField(read_only=True)
+    pending_count = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = CustomUser
+        fields = [
+            'id', 'first_name', 'last_name', 'email',
+            'completed_count', 'pending_count'
+        ]
+
+
 class TodoViewSetCreateSerializer(serializers.ModelSerializer):
     user_id = serializers.PrimaryKeyRelatedField(
         source="user", queryset=CustomUser.objects.all()

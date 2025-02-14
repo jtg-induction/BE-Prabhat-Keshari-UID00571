@@ -60,23 +60,16 @@ class UserTodoStatsSerializer(serializers.ModelSerializer):
 
 
 class TodoViewSetCreateSerializer(serializers.ModelSerializer):
-    todo = serializers.CharField(source='name')
+    todo = serializers.CharField(source='name', write_only=True)
 
     class Meta:
         model = Todo
-        fields = ['todo']
+        fields = ['todo', 'name', 'done', 'date_created']
+        read_only_fields = ['name', 'done', 'date_created']
 
     def create(self, validated_data):
-        validated_data['user_id'] = self.context['request'].user.id
+        validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        return {
-            "name": representation["todo"],
-            "done": instance.done,
-            "date_created": instance.date_created.isoformat()
-        }
 
 
 class TodoViewSetSerializer(serializers.ModelSerializer):

@@ -162,14 +162,8 @@ def fetch_five_users_with_max_pending_todos():
     Util to fetch top five user with maximum number of pending todos
     :return: list of dicts -  List of users
     """
-    User = CustomUser
-    users_with_pending_todos = User.objects.annotate(
-        pending_count=Count(
-            Case(
-                When(todo__done=False, then=Value(1)),
-                output_field=IntegerField()
-            )
-        )
+    users_with_pending_todos = CustomUser.objects.annotate(
+        pending_count=Count('todo', todo__done=False)
     ).order_by('-pending_count')[:5]
     serializer = UserTodoStatsSerializer(users_with_pending_todos, many=True)
     return json.loads(json.dumps(serializer.data))
@@ -202,12 +196,7 @@ def fetch_users_with_n_pending_todos(n):
     """
     User = CustomUser
     users_with_pending_todos = User.objects.annotate(
-        pending_count=Count(
-            Case(
-                When(todo__done=False, then=Value(1)),
-                output_field=IntegerField()
-            )
-        )
+        pending_count=Count('todo', todo__done=False)
     ).filter(pending_count=n)
     serializer = UserTodoStatsSerializer(users_with_pending_todos, many=True)
     return json.loads(json.dumps(serializer.data))
@@ -330,19 +319,9 @@ def fetch_project_wise_report():
     members_prefetch = Prefetch(
         'members',
         CustomUser.objects.annotate(
-            pending_count=Count(
-                Case(
-                    When(todo__done=False, then=1),
-                    output_field=IntegerField()
-                )
-            ),
-            completed_count=Count(
-                Case(
-                    When(todo__done=True, then=1),
-                    output_field=IntegerField()
-                )
-            )
-        ).order_by("email"),
+            pending_count=Count('todo', filter=Q(tood__done=False)),
+            completed_count=Count('todo', filter=Q(todo__done=True))
+        ).order_by("first_name"),
         to_attr='reports'
     )
 

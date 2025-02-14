@@ -131,8 +131,7 @@ def fetch_users_todo_stats():
     Util to fetch todos list stats of all users on platform
     :return: list of dicts -  List of users with stats
     """
-    User = CustomUser
-    users_stats = User.objects.annotate(
+    users_stats = CustomUser.objects.annotate(
         completed_count=Count('todo', filter=Q(todo__done=True)),
         pending_count=Count('todo', filter=Q(todo__done=False))
     ).all()
@@ -194,8 +193,7 @@ def fetch_users_with_n_pending_todos(n):
     :param n: integer - count of pending todos
     :return: list of dicts -  List of users
     """
-    User = CustomUser
-    users_with_pending_todos = User.objects.annotate(
+    users_with_pending_todos = CustomUser.objects.annotate(
         pending_count=Count('todo', todo__done=False)
     ).filter(pending_count=n)
     serializer = UserTodoStatsSerializer(users_with_pending_todos, many=True)

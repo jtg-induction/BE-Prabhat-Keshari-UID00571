@@ -36,22 +36,20 @@ class ProjectWithMemberName(serializers.ModelSerializer):
         fields = ['project_name', 'done', 'max_members']
 
 
+class ProjectReportUserDataSerializer(serializers.ModelSerializer):
+    pending_count = serializers.IntegerField()
+    completed_count = serializers.IntegerField()
+
+    class Meta:
+        model = CustomUser
+        fields = ['first_name', 'last_name', 'email',
+                  'pending_count', 'completed_count']
+
+
 class ProjectReportSerializer(serializers.ModelSerializer):
     project_title = serializers.CharField(source="name")
-    report = serializers.SerializerMethodField()
-
-    def get_report(self, obj):
-        user_reports = []
-        for user in obj.reports:
-            user_report = {
-                "first_name": user.first_name,
-                "last_name": user.last_name,
-                "email": user.email,
-                "pending_count": user.pending_count,
-                "completed_count": user.completed_count
-            }
-            user_reports.append(user_report)
-        return user_reports
+    report = ProjectReportUserDataSerializer(
+        source='reports', many=True, read_only=True)
 
     class Meta:
         model = Project
@@ -66,7 +64,7 @@ class UserProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = (
-            "first_name", "last_name", "email", "to_do_projects", 
+            "first_name", "last_name", "email", "to_do_projects",
             "in_progress_projects", "completed_projects"
         )
 
@@ -78,4 +76,3 @@ class UserProjectSerializer(serializers.ModelSerializer):
 
     def get_completed_projects(self, obj):
         return obj.completed if obj.completed else []
-    

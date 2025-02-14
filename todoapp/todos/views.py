@@ -24,13 +24,18 @@ class TodoAPIViewSet(ModelViewSet):
           }
         ]
     """
+
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
-        if self.action == 'create':
+        if self.request.method == 'post':
             return TodoViewSetCreateSerializer
- 
+
         return TodoViewSetSerializer
+
+    def get_queryset(self):
+        user_id = self.request.data['user_id']
+        return Todo.objects.filter(user__id=user_id)
     
     def get_queryset(self): 
         token = self.request.auth.key

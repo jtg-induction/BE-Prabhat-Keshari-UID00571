@@ -18,9 +18,9 @@ class TodoSerializer(serializers.ModelSerializer):
 
     def get_status(self, obj):
         return "Done" if obj.done else "To Do"
-    
+
     def get_creator(self, obj):
-        creator_data = UserSerializer(obj.user).data  
+        creator_data = UserSerializer(obj.user).data
         creator_data.pop('id', None)
         return creator_data
 
@@ -47,6 +47,18 @@ class TodoDateRangeSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'creator', 'email', 'created_at', 'status']
 
 
+class UserTodoStatsSerializer(serializers.ModelSerializer):
+    completed_count = serializers.IntegerField(read_only=True)
+    pending_count = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = CustomUser
+        fields = [
+            'id', 'first_name', 'last_name', 'email',
+            'completed_count', 'pending_count'
+        ]
+
+
 class TodoViewSetCreateSerializer(serializers.ModelSerializer):
     todo = serializers.CharField(source='name')
 
@@ -70,6 +82,7 @@ class TodoViewSetCreateSerializer(serializers.ModelSerializer):
 class TodoViewSetSerializer(serializers.ModelSerializer):
     todo_id = serializers.IntegerField(source='id')
     todo = serializers.CharField(source='name')
+
     class Meta:
         model = Todo
         fields = ['todo_id', 'todo', 'done']

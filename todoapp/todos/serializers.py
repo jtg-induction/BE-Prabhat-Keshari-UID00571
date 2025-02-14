@@ -18,9 +18,9 @@ class TodoSerializer(serializers.ModelSerializer):
 
     def get_status(self, obj):
         return "Done" if obj.done else "To Do"
-    
+
     def get_creator(self, obj):
-        creator_data = UserSerializer(obj.user).data  
+        creator_data = UserSerializer(obj.user).data
         creator_data.pop('id', None)
         return creator_data
 
@@ -47,29 +47,35 @@ class TodoDateRangeSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'creator', 'email', 'created_at', 'status']
 
 
+class UserTodoStatsSerializer(serializers.ModelSerializer):
+    completed_count = serializers.IntegerField(read_only=True)
+    pending_count = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = CustomUser
+        fields = [
+            'id', 'first_name', 'last_name', 'email',
+            'completed_count', 'pending_count'
+        ]
+
+
 class TodoViewSetCreateSerializer(serializers.ModelSerializer):
-    todo = serializers.CharField(source='name')
+    todo = serializers.CharField(source='name', write_only=True)
 
     class Meta:
         model = Todo
-        fields = ['todo']
+        fields = ['todo', 'name', 'done', 'date_created']
+        read_only_fields = ['name', 'done', 'date_created']
 
     def create(self, validated_data):
-        validated_data['user_id'] = self.context['request'].user.id
+        validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        return {
-            "name": representation["todo"],
-            "done": instance.done,
-            "date_created": instance.date_created.isoformat()
-        }
 
 
 class TodoViewSetSerializer(serializers.ModelSerializer):
     todo_id = serializers.IntegerField(source='id')
     todo = serializers.CharField(source='name')
+
     class Meta:
         model = Todo
         fields = ['todo_id', 'todo', 'done']

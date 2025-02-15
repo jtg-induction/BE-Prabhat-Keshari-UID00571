@@ -24,7 +24,7 @@ class TodoAPIViewSet(ModelViewSet):
     """
 
     def get_serializer_class(self):
-        if self.request.method == 'post':
+        if self.request.method == 'POST':
             return TodoViewSetCreateSerializer
 
         return TodoViewSetSerializer

@@ -1,7 +1,7 @@
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework import generics, status
+from rest_framework.generics import GenericAPIView
 
 from users.serializers import UserLoginSerializer, UserRegistrationSerializer
 
@@ -21,7 +21,7 @@ class UserRegistrationAPIView(generics.CreateAPIView):
     serializer_class = UserRegistrationSerializer
 
 
-class UserLoginAPIView(APIView):
+class UserLoginAPIView(GenericAPIView):
     """
         success response format
          {
@@ -30,10 +30,12 @@ class UserLoginAPIView(APIView):
     """
 
     permission_classes = []
+    serializer_class = [UserLoginSerializer]
 
     def post(self, request):
-        serializer = UserLoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"Email or Password is not valid."}, status=status.HTTP_400_BAD_REQUEST)
 
         user = serializer.validated_data['user']
         token, _ = Token.objects.get_or_create(user=user)

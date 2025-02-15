@@ -317,7 +317,7 @@ def fetch_project_wise_report():
     members_prefetch = Prefetch(
         'members',
         CustomUser.objects.annotate(
-            pending_count=Count('todo', filter=Q(tood__done=False)),
+            pending_count=Count('todo', filter=Q(todo__done=False)),
             completed_count=Count('todo', filter=Q(todo__done=True))
         ).order_by("first_name"),
         to_attr='reports'

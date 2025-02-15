@@ -30,7 +30,7 @@ class UserLoginAPIView(GenericAPIView):
     """
 
     permission_classes = []
-    serializer_class = [UserLoginSerializer]
+    serializer_class = UserLoginSerializer
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)

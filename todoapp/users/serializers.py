@@ -22,7 +22,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = [
-            'email', 'first_name', 'last_name', 'password', 'date_joined', 'token'
+            'email', 'first_name', 'last_name', 'password', 'confirm_password', 'date_joined', 'token'
         ]
 
     def get_token(self, instance):
@@ -34,7 +34,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {'Password and confirm password do not match'}, code=status.HTTP_400_BAD_REQUEST
             )
-
+        validated_data.pop('confirm_password')
         validated_data['password'] = make_password(validated_data['password'])
 
         return validated_data

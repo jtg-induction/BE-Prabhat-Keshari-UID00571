@@ -10,10 +10,10 @@ router = routers.SimpleRouter()
 router.register(r'projects', ProjectMemberApiViewSet, 'projects')
 
 urlpatterns = [
-    path('projects/add/<int:pk>/',
+    path('projects/<str:action>/<int:pk>/',
          ProjectMemberApiViewSet.as_view({'patch': 'partial_update'}), name='project-add'
          ),
-    path('projects/remove/<int:pk>/',
+    path('projects/<str:action>/<int:pk>/',
          ProjectMemberApiViewSet.as_view({'patch': 'partial_update'}), name='project-remove'
          )
 ]

@@ -46,7 +46,13 @@ class ProjectMemberApiViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
 
     def get_serializer_class(self):
-        if 'add' in self.request.path or 'remove' in self.request.path:
+        action = self.kwargs.get("action", None)
+        if action in ["add", "remove"]:
             return ProjectUpdateMemberSerializer
         else:
             return ProjectViewSerializer
+        
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['action'] = self.kwargs.get("action", None)
+        return context

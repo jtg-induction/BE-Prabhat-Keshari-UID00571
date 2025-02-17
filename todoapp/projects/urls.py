@@ -11,11 +11,8 @@ router.register(r'projects', ProjectMemberApiViewSet, 'projects')
 
 urlpatterns = [
     path('projects/<str:action>/<int:pk>/',
-         ProjectMemberApiViewSet.as_view({'patch': 'partial_update'}), name='project-add'
-         ),
-    path('projects/<str:action>/<int:pk>/',
-         ProjectMemberApiViewSet.as_view({'patch': 'partial_update'}), name='project-remove'
-         )
+        ProjectMemberApiViewSet.as_view({'patch': 'partial_update'}), name='project-member-update'
+    )
 ]
 
 urlpatterns += router.urls

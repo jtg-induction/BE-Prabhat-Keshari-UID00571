@@ -17,7 +17,9 @@ class UserRegistrationAPIViewTestCase(APITestCase):
         user_data = {
             "email": "test@testuser.com",
             "password": "password",
-            "confirm_password": "INVALID_PASSWORD"
+            "confirm_password": "INVALID_PASSWORD",
+            "first_name": "test",
+            "last_name": "test"
         }
         response = self.client.post(self.url, user_data)
         self.assertEqual(400, response.status_code)
@@ -29,7 +31,9 @@ class UserRegistrationAPIViewTestCase(APITestCase):
         user_data = {
             "email": "test@testuser.com",
             "password": "123123",
-            "confirm_password": "123123"
+            "confirm_password": "123123",
+            "first_name": "test",
+            "last_name": "test"
         }
         response = self.client.post(self.url, user_data)
         self.assertEqual(201, response.status_code)
@@ -42,7 +46,9 @@ class UserRegistrationAPIViewTestCase(APITestCase):
         user_data_1 = {
             "email": "test@testuser.com",
             "password": "123123",
-            "confirm_password": "123123"
+            "confirm_password": "123123",
+            "first_name": "test",
+            "last_name": "test"
         }
         response = self.client.post(self.url, user_data_1)
         self.assertEqual(201, response.status_code)

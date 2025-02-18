@@ -1,3 +1,4 @@
+from rest_framework.authtoken.models import Token
 from rest_framework.viewsets import ModelViewSet
 
 from todos.models import Todo
@@ -30,5 +31,4 @@ class TodoAPIViewSet(ModelViewSet):
         return TodoViewSetSerializer
 
     def get_queryset(self):
-        user_id = self.request.data['user_id']
-        return Todo.objects.filter(user__id=user_id)
+        return Todo.objects.filter(user=self.request.user)
